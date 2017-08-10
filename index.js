@@ -36,8 +36,15 @@ const createStore = (reducer) => {
 
 const store = createStore(counter);
 
+const Counter = ({value}) => {
+    return <h1>{value}</h1>;
+}
+ 
 const render = () => {
-    document.getElementById("root").innerText = store.getState()
+    ReactDOM.render(
+        <Counter value={store.getState()}/>,
+        document.getElementById("root")
+    );
 };
 
 store.subscribe(render);
