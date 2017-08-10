@@ -1,16 +1,13 @@
-const counter = (state, action) => {
-    if (typeof state === 'undefined'){
-        return 0;
-    } 
-
-    if (action.type === 'INCREMENT') {
+const counter = (state = 0, action) => {
+    switch (action.type) {
+      case 'INCREMENT':
         return state + 1;
-    } else if (action.type === 'DECREMENT') {
+      case 'DECREMENT':
         return state - 1;
-    } else {
+      default:
         return state;
     }
-}
+  }
 
 expect(counter(0, {type: 'INCREMENT'})).toEqual(1);
 
@@ -22,6 +19,6 @@ expect(counter(1, {type: 'DECREMENT'})).toEqual(0);
 
 expect(counter(1, {type: 'OTHER'})).toEqual(1);
 
-expect(counter()).toEqual(0);
+expect(counter(undefined, {type: 'OTHER'})).toEqual(0);
 
 console.log("tests ok!")
