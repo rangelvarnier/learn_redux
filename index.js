@@ -8,3 +8,12 @@ const counter = (state = 0, action) => {
             return state;
     }
 }
+
+const {createStore} = Redux;
+const store = createStore(counter);
+
+const render = () => document.body.innerText = store.getState();
+
+store.subscribe(render);
+
+document.addEventListener('click', () => store.dispatch({type: 'INCREMENT'}));
