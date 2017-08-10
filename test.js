@@ -10,4 +10,4 @@ expect(counter(1, {type: 'OTHER'})).toEqual(1);
 
 expect(counter(undefined, {type: 'OTHER'})).toEqual(0);
 
-console.log("tests ok!")
+console.log("counter tests passed!")
