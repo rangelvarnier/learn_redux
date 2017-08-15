@@ -52,4 +52,4 @@ const testIncrementCounter = () => {
 testAddCounter();
 testRemoveCounter();
 testIncrementCounter();
-console.log('arrayMutations tests passed !')
+console.log('arrayMutations tests passed!')
