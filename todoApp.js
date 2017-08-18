@@ -7,25 +7,59 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
     }
 }
 
-//const {combineReducers} = Redux;
+const {combineReducers, createStore} = Redux;
+const {Component} = React;
 
-const combineReducers = reducers => {
-    return (state = {}, action) => {
+const todoApp = combineReducers({todos, visibilityFilter});
+const store = createStore(todoApp);
 
-        return Object
-            .keys(reducers)
-            .reduce((nextState, key) => {
-                    nextState[key] = reducers[key](
-                        state[key], 
-                        action
-                    );
-                    return nextState;
-                }, {} 
-            );
-    };
-};
+let nextTodoId = 0;
+class TodoApp extends Component {
+    render() {
+        return (
+            <div>
+                <input ref={node => {
+                    this.input= node
+                }}/>
+                <button
+                    onClick={() => {
+                    store.dispatch({
+                        type: 'ADD_TODO',
+                        text: this.input.value,
+                        id: nextTodoId++
+                    });
+                    this.input.value = '';
+                }}>
+                    add todo
+                </button>
+                <ul>
+                    {this.props.todos.map(todo => 
+                        <li key={todo.id} 
+                        onClick={()=>{
+                            store.dispatch({
+                                type: 'TOGGLE_TODO',
+                                id: todo.id
+                            })
+                        }} style={{
+                            textDecoration: 
+                                todo.completed 
+                                ? 'line-through' 
+                                : 'none'
+                        }}>
+                            {todo.text}
+                        </li>
+                    )}
+                </ul>
+            </div>
+        )
+    }
+}
 
-const todoApp = combineReducers({
-    todos,
-    visibilityFilter
-});
+const render = () => {
+    ReactDOM.render(
+        <TodoApp todos={store.getState().todos}/>,
+        document.getElementById('root'))
+}
+
+store.subscribe(render);
+render();
