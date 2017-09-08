@@ -2,6 +2,7 @@ const {combineReducers, createStore} = Redux;
 const {Component} = React;
 const {connect} = ReactRedux;
 
+//filter reducer
 const visibilityFilter = (state = 'SHOW_ALL', action) => {
     switch (action.type) {
         case 'SET_VISIBILITY_FILTER':
@@ -10,6 +11,34 @@ const visibilityFilter = (state = 'SHOW_ALL', action) => {
             return state;
     }
 }
+
+const {Provider} = ReactRedux;
+const todoApp = combineReducers({todos, visibilityFilter});
+
+let nextTodoId = 0;
+const addTodo = (text) => {
+    return {
+        type: 'ADD_TODO',
+        id: nextTodoId++,
+        text
+    }
+}
+
+const setVisibilityFilter = (filter) => {
+    return {
+        type: 'SET_VISIBILITY_FILTER',
+        filter
+    }
+}
+
+const toggleTodo = (id) => {
+    return {
+        type: 'TOGGLE_TODO',
+        id
+    }
+}
+
+
 
 const Link = ({active, children, onClick}) => {
     if (active) {
@@ -36,10 +65,7 @@ const mapStateToLinkProps = (state, ownProps) => {
 const mapDispatchToLinkProps = (dispatch, ownProps) => {
     return {
         onClick: () => {
-            dispatch({
-                type: 'SET_VISIBILITY_FILTER',
-                filter: ownProps.filter
-            })
+            dispatch(setVisibilityFilter(ownProps.filter))
         }
     }
 }
@@ -88,11 +114,7 @@ let AddTodo = ({dispatch}) => {
             }}/>
             <button
                 onClick={() => {
-                dispatch({
-                    type: 'ADD_TODO',
-                    id: nextTodoId++,
-                    text: input.value
-                });
+                dispatch(addTodo(input.value));
                 input.value = '';
             }}>
                 add todo
@@ -126,7 +148,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         onClickTodo: (id) => {
-            dispatch({type: 'TOGGLE_TODO', id})
+            dispatch(toggleTodo(id))
         }
     }
 }
@@ -134,7 +156,6 @@ const mapDispatchToProps = (dispatch) => {
 
 const VisibleTodoList = connect(mapStateToProps, mapDispatchToProps)(TodoList);
 
-let nextTodoId = 0;
 const TodoApp = () => (
     <div>
         <AddTodo/>
@@ -142,9 +163,6 @@ const TodoApp = () => (
         <Footer/>
     </div>
 );
-
-const {Provider} = ReactRedux;
-const todoApp = combineReducers({todos, visibilityFilter});
 
 ReactDOM.render(
     <Provider store={createStore(todoApp)}>
